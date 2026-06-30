@@ -13,7 +13,12 @@ func cleanInput(text string) []string {
 	return words
 }
 
-func startRepl() {
+type config struct {
+	nextLocationsURL *string
+	prevLocationsURL *string
+}
+
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -37,7 +42,7 @@ func startRepl() {
 		commands := getCommands()
 		command, exists := commands[cliInput]
 		if exists {
-			err := command.callback()
+			err := command.callback(cfg)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -50,7 +55,7 @@ func startRepl() {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -64,6 +69,16 @@ func getCommands() map[string]cliCommand {
 			name:        "help",
 			description: "Displays a help message with valid commands for the pokedex",
 			callback:    commandHelp,
+		},
+		"map": {
+			name:        "map",
+			description: "Get the next page of locations",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Get the previous page of locations",
+			callback:    commandMapb,
 		},
 	}
 }
