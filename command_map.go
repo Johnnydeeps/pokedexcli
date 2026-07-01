@@ -16,7 +16,7 @@ type locationAreasResponse struct {
 	} `json:"results"`
 }
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, args ...string) error {
 	url := "https://pokeapi.co/api/v2/location-area/"
 	//.  "Default to page 1. But if cfg already has a next-page URL stored from a previous call,
 	// use that instead." The *cfg.nextLocationsURL dereferences the pointer to get the actual string.
@@ -101,7 +101,7 @@ func commandMap(cfg *config) error {
 	return nil
 }
 
-func commandMapb(cfg *config) error {
+func commandMapb(cfg *config, args ...string) error {
 	if cfg.prevLocationsURL == nil {
 		return errors.New("you're on the first page")
 	}
