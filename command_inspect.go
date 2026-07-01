@@ -11,9 +11,19 @@ func commandInspect(cfg *config, args ...string) error {
 		fmt.Printf("ID: %d\n", pokemon.ID)
 		fmt.Printf("Height: %d\n", pokemon.Height)
 		fmt.Printf("Weight: %d\n", pokemon.Weight)
-		fmt.Printf("Forms: %s\n", pokemon.Forms)
-		fmt.Printf("Stats: %v\n", pokemon.Stats)
-		fmt.Printf("Types: %v\n", pokemon.Types)
+
+		fmt.Println("Forms:")
+		for _, form := range pokemon.Forms {
+			fmt.Printf("  -%s\n", form.Name)
+		}
+		fmt.Println("Stats:")
+		for _, stat := range pokemon.Stats {
+			fmt.Printf("  -%s: %v\n", stat.Stat.Name, stat.BaseStat)
+		}
+		fmt.Println("Types:")
+		for _, t := range pokemon.Types {
+			fmt.Printf("  -%s\n", t.Type.Name)
+		}
 	}
 	return nil
 }
