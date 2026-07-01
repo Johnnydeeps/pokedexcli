@@ -20,7 +20,7 @@ func commandExplore(cfg *config, args ...string) error {
 	if len(args) != 1 {
 		return errors.New("too many locations/arguements...pick one area to explore only")
 	}
-	//. adding cli argument to end of URL api endpoint, argument should be an area listed from the map
+	//. adding cli argument to URL api endpoint request, argument should be an area listed from the map
 	// function, which will then give us all the pokemon that you could encounter in that specified area
 	url := "https://pokeapi.co/api/v2/location-area/" + args[0]
 
