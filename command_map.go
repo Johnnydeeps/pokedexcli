@@ -24,7 +24,23 @@ func commandMap(cfg *config) error {
 		// this is where the string in memory is deferenced (*)
 		url = *cfg.nextLocationsURL
 	}
-
+	//. check cache to if the constructed url above is present as a key value in the cache struct, if it is,
+	// if check triggers and unpacks previously cached raw json response without having to make a new get()
+	// request.
+	cachedJson, ok := cfg.cache.Get(url)
+	if ok {
+		locations := locationAreasResponse{}
+		err := json.Unmarshal(cachedJson, &locations)
+		if err != nil {
+			return err
+		}
+		cfg.nextLocationsURL = locations.Next
+		cfg.prevLocationsURL = locations.Previous
+		for _, location := range locations.Results {
+			fmt.Println(location.Name)
+		}
+		return nil
+	}
 	// ***********************************************************************************************
 	//. {
 	// "count": 1089,
@@ -63,6 +79,8 @@ func commandMap(cfg *config) error {
 	if err != nil {
 		return err
 	}
+	//add url to cache for caching functionality to take place, stores raw json response as a slice []byte
+	cfg.cache.Add(url, bodyContent)
 
 	locations := locationAreasResponse{}
 	err = json.Unmarshal(bodyContent, &locations)
@@ -90,6 +108,24 @@ func commandMapb(cfg *config) error {
 
 	url := *cfg.prevLocationsURL
 
+	//. check cache to if the constructed url above is present as a key value in the cache struct, if it is,
+	// if check triggers and unpacks previously cached raw json response without having to make a new get()
+	// request.
+	cachedJson, ok := cfg.cache.Get(url)
+	if ok {
+		locations := locationAreasResponse{}
+		err := json.Unmarshal(cachedJson, &locations)
+		if err != nil {
+			return err
+		}
+		cfg.nextLocationsURL = locations.Next
+		cfg.prevLocationsURL = locations.Previous
+		for _, location := range locations.Results {
+			fmt.Println(location.Name)
+		}
+		return nil
+	}
+
 	response, err := http.Get(url)
 	if err != nil {
 		return err
@@ -100,6 +136,9 @@ func commandMapb(cfg *config) error {
 	if err != nil {
 		return err
 	}
+
+	//add url to cache for caching functionality to take place, stores raw json response as a slice []byte
+	cfg.cache.Add(url, bodyContent)
 
 	locations := locationAreasResponse{}
 	err = json.Unmarshal(bodyContent, &locations)

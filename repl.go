@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/Johnnydeeps/pokedexcli/internal/pokecache"
 )
 
 func cleanInput(text string) []string {
@@ -16,6 +18,7 @@ func cleanInput(text string) []string {
 type config struct {
 	nextLocationsURL *string
 	prevLocationsURL *string
+	cache            pokecache.Cache
 }
 
 func startRepl(cfg *config) {
